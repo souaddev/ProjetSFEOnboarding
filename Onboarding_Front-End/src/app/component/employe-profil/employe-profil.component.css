@@ -1,0 +1,11 @@
+.myTitle{
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bolder;
+    margin:5px 0 0 0;
+}
+.myInfo{
+    /* color:gray; */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:5px 0 0 0;
+}

@@ -1,0 +1,34 @@
+<h3>Liste des documents non-rendu</h3>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>Table des documents
+          </div>
+          <div class="card-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nom de document</th>
+                  <th>Date de rendu</th>
+                  <th>Numéro de l'employé</th>
+                  <th>Nom de l'employé</th>
+                  <th>Service</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let document of documents">
+                    <td>{{document.label}}</td>
+                    <td>{{document.dateRendu}}</td>
+                    <td>{{document.employe.id}} </td>
+                    <td>{{document.employe.nom}} {{document.employe.prenom}} </td>
+                    <td>{{document.employe.equipe.service}} </td>
+                    <td *ngIf="document.isValide && !document.notifier"><span class="badge badge-success">rendu</span></td>
+                    <td *ngIf="!document.isValide && !document.notifier"><span class="badge badge-danger">non-rendu</span></td>
+                    <td *ngIf="!document.isValide && document.notifier"><span class="badge badge-danger">non-rendu</span><span class="badge badge-warning">notifier</span></td>
+                    <td *ngIf="document.isValide && document.notifier"><span class="badge badge-success">rendu</span><span class="badge badge-warning">notifier</span></td>                      
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+          

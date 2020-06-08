@@ -1,0 +1,76 @@
+<div class="card card-accent-primary">
+    <div style="text-align: center;" class="card-body">
+        <h2>Informations Personnelles</h2>
+    </div>
+</div>
+<div class="card card-accent-primary">
+    <!-- <div class="card-header">
+      Information personnelles
+    </div> -->
+    <div class="card-body">
+        <div class="row">
+            <div style="text-align: center;margin-left: -120px;" class="col-sm-7 col-md-7 myTitle">
+                <div><img style="width: 100px;margin-bottom: 5px;" src="assets/img/avatars/employeLogo.png" alt="logo"> </div>
+                <div>{{employe.prenom}} {{employe.nom}} </div>
+            </div>
+            <div style="margin-top: 30px;" class="col-sm-5 col-md-5 myInfo">
+                <div class="text-muted mr-3">
+                    <div><i style="margin-right: 5px;" class="fa fa-suitcase"></i>  {{employe.poste.nomPoste}}</div>
+                    <div><i style="margin-right: 5px;" class="fa fa-group"></i>  {{employe.equipe.service}}</div>
+                    <div><i style="margin-right: 5px;" class="fa fa-envelope"></i>  {{employe.email}}</div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-6">
+      <div class="card card-accent-primary">
+        <div class="card-body">
+         <div class="row">
+            <div class="col-sm-4 col-md-4 myTitle">
+                <div>Nom </div>
+                <div>Prenom </div>
+                <div>Email</div>
+                <div>Téléphone </div>
+                <div>CIN </div>
+                <div>Mot de passe </div>
+            </div>
+            <div class="col-sm-7 col-md-7 myInfo">
+                <div>{{employe.nom}}</div>
+                <div>{{employe.prenom}}</div>
+                <div>{{employe.email}}</div>
+                <div>{{employe.tel}}</div>
+                <div>{{employe.cin}}</div>
+                <div>{{employe.motPasse}}</div>
+            </div>
+         </div>
+        </div>
+      </div>
+    </div><!--/.col-->
+
+    <div  class="col-sm-6 col-md-6">
+      <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-5 col-md-5 myTitle">
+                    <div>Sexe </div>
+                    <div>Adresse </div>
+                    <div>Date de naissance</div>
+                    <div>Date d'entrée</div>
+                    <div>Service </div>
+                    <div>Poste </div>
+                </div>
+                <div class="col-sm-7 col-md-7 myInfo">
+                    <div>{{employe.sexe}}</div>
+                    <div>{{employe.adresse}}</div>
+                    <div>{{employe.dateNaissance}}</div>
+                    <div>{{employe.dateRecrutement}}</div>
+                    <div>{{employe.equipe.service}}</div>
+                    <div>{{employe.poste.nomPoste}}</div>
+                </div>
+             </div>
+        </div>
+      </div>
+    </div>
+</div>

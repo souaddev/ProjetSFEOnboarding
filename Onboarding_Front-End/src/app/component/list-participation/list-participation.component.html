@@ -1,0 +1,165 @@
+<h3>Gestion des participations</h3>
+<alert *ngIf="delete" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien supprimé.
+</alert>
+<alert *ngIf="created" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien créé.
+</alert>
+<alert *ngIf="updated" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien modifié.
+</alert>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>Table des participations
+          </div>
+          <div class="card-body">
+            
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Numéro de participation</th>
+                  <th>Nom de l'employe</th>
+                  <th>Nom de l'événement</th>
+                  <th>Date de participation</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let participation of participations">
+                    <td> {{participation.id}} </td>
+                    <td>{{participation.employe.nom}} {{participation.employe.prenom}}</td>
+                    <td> {{participation.evenement.nom}} </td>
+                    <td> {{participation.dateParticipation}} </td>
+                    <td><button class="btn btn-danger" data-toggle="modal" (click)="smallModal.show()">Supprimer</button>
+                      <button class="btn btn-primary" (click)="onUpdate(participation)">Modifier</button></td>
+                      <div bsModal #smallModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Suppression</h4>
+                              <button type="button" class="close" (click)="smallModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p>Voulez-vous vraiment supprimer cet enregistrement ?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" (click)="smallModal.hide()">Fermer</button>
+                              <button type="button" class="btn btn-primary" (click)="deleteParticipation(participation)">Supprimer</button>
+                            </div>
+                          </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                      </div><!-- /.modal -->
+
+                      <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                            <!-- Update Form  -->
+                            <form [formGroup]="formUpdate" (ngSubmit)="updateForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Modifier une participation</h4>
+                              <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="card">
+                                <div class="card-header">
+                                  <strong>Informations</strong> 
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">Nom de l'employé</label>
+                                        <div class="col-md-9">
+                                          <select  formControlName="employe" name="employe" class="form-control">
+                                             <option *ngFor="let employe of employes" value={{employe.id}} >{{participation.employe.nom}} {{participation.employe.prenom}}</option>
+                                          </select>
+                                          <span *ngIf="submitUpdate && formUp.employe.errors?.required" class="help-block">Veuillez choisir l'employé</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">Nom d'évenement</label>
+                                        <div class="col-md-9">
+                                          <select  formControlName="evenement" name="evenement" class="form-control">
+                                             <option *ngFor="let evenement of evenements" value={{evenement.id}} >{{participation.evenement.nom}}</option>
+                                          </select>
+                                          <span *ngIf="submitUpdate && formUp.evenement.errors?.required" class="help-block">Veuillez choisir l'événement</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="date-input">Date de participation</label>
+                                        <div class="col-md-9">
+                                          <input class="form-control" formControlName="dateParticipation" type="date" name="dateParticipation" >
+                                          <span *ngIf="submitUpdate && formUp.dateParticipation.errors?.required" class="help-block">Veuillez entrer la date participation</span>
+                                          <span *ngIf="errorDateP.isError" class="help-block">{{ errorDateP.errorMessage }}</span>
+                                         </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Fermer</button>
+                              <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                          </form>
+                          <!-- End Form -->
+                          </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                      </div><!-- /.modal -->
+                </tr>
+              </tbody>
+            </table>
+            <!-- Modal d'ajout -->
+            <button class="btn btn-primary" (click)="onAdd()">Ajouter</button>
+                    
+            <div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <!-- Add Form  -->
+                  <form [formGroup]="formAdd" (ngSubmit)="createForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Ajouter une nouvelle participation</h4>
+                    <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="card">
+                      <div class="card-header">
+                        <strong>Informations</strong> 
+                      </div>
+                      <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">Nom de l'employé</label>
+                            <div class="col-md-9">
+                              <select  formControlName="employe" name="employe" class="form-control">
+                                 <option *ngFor="let employe of employes" [ngValue]="employe" >{{employe.nom}} {{employe.prenom}}</option>
+                              </select>
+                              <span *ngIf="submitted && form.employe.errors?.required" class="help-block">Veuillez choisir l'employé</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">Nom d'évenement</label>
+                            <div class="col-md-9">
+                              <select  formControlName="evenement" name="evenement" class="form-control">
+                                 <option *ngFor="let evenement of evenements" [ngValue]="evenement" >{{evenement.nom}}</option>
+                              </select>
+                              <span *ngIf="submitted && form.evenement.errors?.required" class="help-block">Veuillez choisir l'événement</span>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="addModal.hide()">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                  </div>
+                </form>
+                <!-- End Form -->
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+          </div>
+        </div>
+          

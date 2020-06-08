@@ -1,0 +1,22 @@
+<tabset >
+    <tab>
+        <ng-template tabHeading><i class="icon-bell"></i></ng-template>
+        <div *ngFor="let employe of employes;let i = index;" class="list-group list-group-accent">       
+            <div class="list-group-item list-group-item-accent-{{colors[Math.floor(Math.random() * colors.length)]}} list-group-item-divider">
+                <div>
+                    <strong><i class="icon-people"></i>  {{employe.nom}} {{employe.prenom}}</strong> est viens de faire partie de votre équipe 
+                    <strong> {{employe.equipe.service}} </strong>avec le poste de <strong> {{employe.poste.nomPoste}}</strong>
+                </div>
+                <small class="text-muted mr-3">
+                    <i class="icon-calendar"></i>  {{employe.dateRecrutement | date:'EEEE dd LLLL y'}} à {{employe.dateRecrutement | date:'hh:mma'}}
+                </small>
+                <small class="text-muted">
+                    <i class="fa fa-suitcase"></i>  {{employe.poste.nomPoste}}
+                </small>
+                
+            </div>
+        </div>
+  </tab>
+</tabset>
+<div class="card card-cascade"></div>
+ 

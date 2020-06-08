@@ -1,0 +1,29 @@
+<h3>Liste des membre de même équipe</h3>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>Table des émployes
+          </div>
+          <div class="card-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Numéro de l'employé</th>
+                  <th>Nom de l'employé</th>
+                  <th>Service</th>
+                  <th>Poste</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employe of employes">
+                    <td>{{employe.id}} </td>
+                    <td>{{employe.nom}} {{employe.prenom}} </td>
+                    <td>{{employe.equipe.service}} </td>
+                    <td>{{employe.poste.nomPoste}} </td>
+                    <td>{{employe.email}} </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+

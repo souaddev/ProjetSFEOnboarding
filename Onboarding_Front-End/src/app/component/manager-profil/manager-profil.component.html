@@ -1,0 +1,51 @@
+<div class="card card-accent-primary">
+    <div style="text-align: center;" class="card-body">
+        <h2>Informations Personnelles</h2>
+    </div>
+</div>
+<div class="card card-accent-primary">
+    <!-- <div class="card-header">
+      Information personnelles
+    </div> -->
+    <div class="card-body">
+        <div class="row">
+            <div style="text-align: center;margin-left: -120px;" class="col-sm-7 col-md-7 myTitle">
+                <div><img style="width: 100px;margin-bottom: 5px;" src="assets/img/avatars/employeLogo.png" alt="logo"> </div>
+                <div>{{manager.prenom}} {{manager.nom}} </div>
+            </div>
+            <div style="margin-top: 30px;" class="col-sm-5 col-md-5 myInfo">
+                <div class="text-muted mr-3">
+                    <div><i style="margin-right: 5px;" class="fa fa-suitcase"></i>  Manager</div>
+                    <div><i style="margin-right: 5px;" class="fa fa-group"></i> Informatique {{equipe?.service}}</div>
+                    <div><i style="margin-right: 5px;" class="fa fa-envelope"></i>  {{manager.email}}</div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+      <div class="card card-accent-primary">
+        <div class="card-body">
+         <div class="row">
+            <div class="col-sm-4 col-md-4 myTitle">
+                <div>Nom </div>
+                <div>Prenom </div>
+                <div>Role </div>
+                <div>Service </div>
+                <div>Email</div>
+                <div>Mot de passe </div>
+            </div>
+            <div class="col-sm-7 col-md-7 myInfo">
+                <div>{{manager.nom}}</div>
+                <div>{{manager.prenom}}</div>
+                <div>Manager</div>
+                <div>Informatique{{equipe?.service}}</div>
+                <div>{{manager.email}}</div>
+                <div>{{manager.motPasse}}</div>
+            </div>
+         </div>
+        </div>
+      </div>
+    </div><!--/.col-->
+</div>

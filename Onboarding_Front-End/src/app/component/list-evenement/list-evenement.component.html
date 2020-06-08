@@ -1,0 +1,213 @@
+<h3>Gestion des événements</h3>
+<alert *ngIf="delete" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien supprimé.
+</alert>
+<alert *ngIf="created" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien créé.
+</alert>
+<alert *ngIf="updated" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien modifié.
+</alert>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>Table des événements
+          </div>
+          <div class="card-body">
+            
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nom d'événement</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Lieu</th>
+                  <th>Date de début</th>
+                  <th>Date de fin</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let evenement of evenements">
+                    <td>{{evenement.nom}}</td>
+                    <td>{{evenement.type}}</td>
+                    <td>{{evenement.description}}</td>
+                    <td>{{evenement.lieu}}</td>
+                    <td>{{evenement.dateDebut | date:'dd/MM/yyyy  HH:mm'}}</td>
+                    <td>{{evenement.dateFin | date:'dd/MM/yyyy  HH:mm'}}</td>
+                    <td><button class="btn btn-danger" data-toggle="modal" (click)="smallModal.show()">Supprimer</button>
+                      <button class="btn btn-primary" (click)="onUpdate(evenement)">Modifier</button></td>
+                      <div bsModal #smallModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Suppression</h4>
+                              <button type="button" class="close" (click)="smallModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p>Voulez-vous vraiment supprimer cet enregistrement ?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" (click)="smallModal.hide()">Fermer</button>
+                              <button type="button" class="btn btn-primary" (click)="deleteEvenement(evenement)">Supprimer</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                            <!-- Update Form  -->
+                            <form [formGroup]="formUpdate" (ngSubmit)="updateForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Modifier un évènement</h4>
+                              <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="card">
+                                <div class="card-header">
+                                  <strong>Informations</strong> 
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                      <label class="col-md-3 col-form-label" for="text-input">Nom d'évènement</label>
+                                      <div class="col-md-9">
+                                        <input type="text" formControlName="nom" name="nom" class="form-control">
+                                        <span *ngIf="submitUpdate && formUp.nom.errors?.required" class="help-block">Veuillez saisir le nom d'évènement</span>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">Type d'évènement</label>
+                                        <div class="col-md-9">
+                                          <input type="text" formControlName="type" name="type" class="form-control">
+                                          <span *ngIf="submitUpdate && formUp.type.errors?.required" class="help-block">Veuillez saisir le type d'évènement</span>
+                                        </div>
+                                      </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">La description</label>
+                                        <div class="col-md-9">
+                                          <input type="text" formControlName="description" name="description" class="form-control">
+                                          <span *ngIf="submitUpdate && formUp.description.errors?.required" class="help-block">Veuillez saisir la description</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">Le lieu</label>
+                                        <div class="col-md-9">
+                                          <input type="text" formControlName="lieu" name="lieu" class="form-control">
+                                          <span *ngIf="submitUpdate && formUp.lieu.errors?.required" class="help-block">Veuillez saisir le lieu</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="date-input">Date de début</label>
+                                        <div class="col-md-9">
+                                          <input class="form-control" [ngModel]="dateDebut | date:'yyyy-MM-ddTHH:mm'" formControlName="dateDebut" [ngModel]="dateDebut | date:'yyyy-MM-ddTHH:mm'" type="datetime-local" name="dateDebut" >
+                                          <span *ngIf="submitUpdate && formUp.dateDebut.errors?.required" class="help-block">Veuillez entrer la date de début</span>
+                                          <!-- <span *ngIf="errorDateD.isError" class="help-block">{{ errorDateD.errorMessage }}</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="date-input">Date de fin</label>
+                                        <div class="col-md-9">
+                                          <input class="form-control" [ngModel]="dateFin | date:'dd/mm/yyyyTHH:mm'" formControlName="dateFin" type="datetime-local" name="dateFin" >
+                                          <span *ngIf="submitUpdate && formUp.dateFin.errors?.required" class="help-block">Veuillez entrer la date de fin</span>
+                                          <!-- <span *ngIf="errorDateF.isError" class="help-block">{{ errorDateF.errorMessage }}</span> -->
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Fermer</button>
+                              <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                          </form>
+                          <!-- End Form -->
+                          </div>
+                        </div>
+                      </div>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Modal d'ajout -->
+            <button class="btn btn-primary" (click)="onAdd()">Ajouter</button>
+                    
+            <div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <!-- Add Form  -->
+                  <form [formGroup]="formAdd" (ngSubmit)="createForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Ajouter un nouveau évènement</h4>
+                    <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="card">
+                      <div class="card-header">
+                        <strong>Informations</strong> 
+                      </div>
+                      <div class="card-body">
+                         <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">Nom d'évènement</label>
+                            <div class="col-md-9">
+                              <input type="text" formControlName="nom" name="nom" class="form-control">
+                              <span *ngIf="submitted && form.nom.errors?.required" class="help-block">Veuillez saisir le nom d'évènement</span>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">Type d'évènement</label>
+                              <div class="col-md-9">
+                                <input type="text" formControlName="type" name="type" class="form-control">
+                                <span *ngIf="submitted && form.type.errors?.required" class="help-block">Veuillez saisir le type d'évènement</span>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">La description</label>
+                              <div class="col-md-9">
+                                <input type="text" formControlName="description" name="description" class="form-control">
+                                <span *ngIf="submitted && form.description.errors?.required" class="help-block">Veuillez saisir la description</span>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">Le lieu</label>
+                              <div class="col-md-9">
+                                <input type="text" formControlName="lieu" name="lieu" class="form-control">
+                                <span *ngIf="submitted && form.lieu.errors?.required" class="help-block">Veuillez saisir le lieu</span>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="date-input">Date de début</label>
+                              <div class="col-md-9">
+                                <input class="form-control" formControlName="dateDebut" type="datetime-local" name="dateDebut" >
+                                <span *ngIf="submitted && form.dateDebut.errors?.required" class="help-block">Veuillez entrer la date de début</span>
+                                <!-- <span *ngIf="errorDateD.isError" class="help-block">{{ errorDateD.errorMessage }}</span> -->
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="date-input">Date de fin</label>
+                              <div class="col-md-9">
+                                <input class="form-control" formControlName="dateFin" type="datetime-local" name="dateFin" >
+                                <span *ngIf="submitted && form.dateFin.errors?.required" class="help-block">Veuillez entrer la date de fin</span>
+                                <!-- <span *ngIf="errorDateF.isError" class="help-block">{{ errorDateF.errorMessage }}</span> -->
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="addModal.hide()">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                  </div>
+                </form>
+                <!-- End Form -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          

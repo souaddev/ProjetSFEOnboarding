@@ -1,0 +1,58 @@
+<app-header
+  [navbarBrandRouterLink]="['/employe/statistique']"
+  [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/brand/logo_size.png', width: 125, height: 35, alt: ' Logo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/avatars/Ologo.jpg', width: 55, height: 55, alt: ' Logo'}"
+  [sidebarToggler]="'lg'"
+  [asideMenuToggler]="'lg'">
+  <ul class="nav navbar-nav d-md-down-none">
+    <li class="nav-item px-3">
+      <a class="nav-link" href="/#/employe/agenda">Agenda</a>
+    </li>
+    <li class="nav-item px-3">
+      <a class="nav-link" href="/#/employe/documentNonRendu">Document non rendu</a>
+    </li>
+    <li class="nav-item px-3">
+      <a class="nav-link" href="/#/employe/statistique">Statistique</a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item d-md-down-none">
+      <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger"> ?</span></a>
+    </li>
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
+        <img style="margin-top: -6px;width: 60px;height: 60px;" src="assets/img/avatars/EmployeLogo2.jpg" class="img-avatar" alt="manager picture"/>
+      </a>
+
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+        <div class="dropdown-header text-center"><strong>Compte</strong></div>
+        <a class="dropdown-item" href="/#/employe/profil"><i class="fa fa-user"></i> Profile</a>
+        <a class="dropdown-item" (click)="logOut()"><i class="fa fa-lock"></i> Déconnexion</a>
+      </div>
+    </li>
+    <li>
+      <div style="letter-spacing: 1px;color: #73818f;font-weight: 200;
+      border-radius: 0.25rem;padding: 2px;text-align: center;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+        <div > {{employe?.nom}} {{employe?.prenom}}</div>
+        <div > Employé </div>
+      </div>
+  </li>
+  </ul>
+</app-header>
+<div class="app-body">
+  <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized" (minimizedChange)="toggleMinimize($event)">
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+
+  <main class="main">
+    <ol class="breadcrumb">
+      <app-breadcrumb></app-breadcrumb>
+    </ol>
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+  
+</div>

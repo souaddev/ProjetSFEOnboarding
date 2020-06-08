@@ -1,0 +1,185 @@
+<h3>Gestion des documents</h3>
+<alert *ngIf="delete" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien supprimé.
+</alert>
+<alert *ngIf="created" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien créé.
+</alert>
+<alert *ngIf="updated" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien modifié.
+</alert>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>Table des documents
+          </div>
+          <div class="card-body">
+            
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Nom de document</th>
+                  <th>Date de rendu</th>
+                  <th>Numéro de l'employé</th>
+                  <th>Nom de l'employé</th>
+                  <th>Service</th>
+                  <th>Rendu</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let document of documents">
+                    <td>{{document.label}}</td>
+                    <td>{{document.dateRendu}}</td>
+                    <td>{{document.employe.id}} </td>
+                    <td>{{document.employe.nom}} {{document.employe.prenom}} </td>
+                    <td>{{document.employe.equipe.service}} </td>
+                    <td *ngIf="document.isValide && !document.notifier"><span class="badge badge-success">rendu</span></td>
+                    <td *ngIf="!document.isValide && !document.notifier"><span class="badge badge-danger">non-rendu</span></td>
+                    <td *ngIf="!document.isValide && document.notifier"><span class="badge badge-danger">non-rendu</span><span class="badge badge-warning">notifier</span></td>
+                    <td *ngIf="document.isValide && document.notifier"><span class="badge badge-success">rendu</span><span class="badge badge-warning">notifier</span></td>
+                    <td><button class="btn btn-danger .btn-sm" data-toggle="modal" (click)="smallModal.show()">Supprimer</button>
+                      <button class="btn btn-primary .btn-sm" (click)="onUpdate(document)">Modifier</button>
+                      <button class="btn btn-warning .btn-sm" (click)="notify(document)">Notifier</button></td>
+                      <div bsModal #smallModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Suppression</h4>
+                              <button type="button" class="close" (click)="smallModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p>Voulez-vous vraiment supprimer cet enregistrement ?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" (click)="smallModal.hide()">Fermer</button>
+                              <button type="button" class="btn btn-primary" (click)="deleteDocument(document)">Supprimer</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                            <!-- Update Form  -->
+                            <form [formGroup]="formUpdate" (ngSubmit)="updateForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Modifier un document</h4>
+                              <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="card">
+                                <div class="card-header">
+                                  <strong>Informations</strong> 
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                      <label class="col-md-3 col-form-label" for="text-input">Nom de document</label>
+                                      <div class="col-md-9">
+                                        <input type="text" formControlName="label" name="label" class="form-control">
+                                        <span *ngIf="submitUpdate && formUp.label.errors?.required" class="help-block">Veuillez saisir le nom de document</span>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="date-input">Date de rendu</label>
+                                        <div class="col-md-9">
+                                          <input class="form-control" formControlName="dateRendu" type="date" name="dateNaissance" >
+                                          <span *ngIf="submitUpdate && formUp.dateRendu.errors?.required" class="help-block">Veuillez entrer la date rendu de document</span>
+                                          <span *ngIf="errorDateR.isError" class="help-block">{{ errorDateR.errorMessage }}</span>
+                                         </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">Status</label>
+                                        <div class="col-md-9">
+                                          <select  formControlName="isValide" name="isValide" class="form-control ">
+                                            <option [ngValue]="true">rendu</option>
+                                            <option [ngValue]="false">non rendu</option>
+                                          </select>
+                                          <span *ngIf="submitUpdate && formUp.isValide.errors?.required" class="help-block">Veuillez entrer un status</span>
+                                        </div>
+                                      </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="text-input">Nom de l'employe</label>
+                                        <div class="col-md-9">
+                                          <select  formControlName="employe" name="employe" class="form-control">
+                                             <option *ngFor="let employe of employes" value={{employe.id}} >{{employe.nom}} {{employe.prenom}}</option>
+                                          </select>
+                                          <span *ngIf="submitUpdate && formUp.employe.errors?.required" class="help-block">Veuillez choisir l'employe</span>
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Fermer</button>
+                              <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                          </form>
+                          <!-- End Form -->
+                          </div>
+                        </div>
+                      </div>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Modal d'ajout -->
+            <button class="btn btn-primary" (click)="onAdd()">Ajouter</button>
+                    
+            <div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <!-- Add Form  -->
+                  <form [formGroup]="formAdd" (ngSubmit)="createForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Ajouter un nouveau document</h4>
+                    <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="card">
+                      <div class="card-header">
+                        <strong>Informations</strong> 
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="text-input">Nom de document</label>
+                        <div class="col-md-9">
+                          <input type="text" formControlName="label" name="label" class="form-control">
+                          <span *ngIf="submitted && form.label.errors?.required" class="help-block">Veuillez saisir le nom de document</span>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="date-input">Date de rendu</label>
+                          <div class="col-md-9">
+                            <input class="form-control" formControlName="dateRendu" type="date" name="dateNaissance" >
+                            <span *ngIf="submitted && form.dateRendu.errors?.required" class="help-block">Veuillez entrer la date rendu de document</span>
+                            <span *ngIf="errorDateR.isError" class="help-block">{{ errorDateR.errorMessage }}</span>
+                           </div>
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="text-input">Nom de l'employe</label>
+                          <div class="col-md-9">
+                            <select  formControlName="employe" name="employe" class="form-control">
+                               <option *ngFor="let employe of employes" [ngValue]="employe" >{{employe.nom}} {{employe.prenom}}</option>
+                            </select>
+                            <span *ngIf="submitted && form.employe.errors?.required" class="help-block">Veuillez choisir l'employe</span>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="addModal.hide()">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                  </div>
+                </form>
+                <!-- End Form -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          

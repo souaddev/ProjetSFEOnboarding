@@ -1,0 +1,24 @@
+<tabset >
+    <tab>
+      <ng-template tabHeading><i class="icon-list"></i></ng-template>
+      <div *ngFor="let participation of participations;let i = index;" class="list-group list-group-accent">
+        <div *ngIf='(i ==0 && format(participation.evenement.dateDebut)!=format(date))|| ( i > 0 &&  format(participation.evenement.dateDebut)!= format(participations[i-1].evenement.dateDebut) && format(participation.evenement.dateDebut)!=format(date))' class="list-group-item list-group-item-accent-secondary bg-light text-center font-weight-bold text-muted text-uppercase small">{{participation.evenement.dateDebut | date:'EEEE dd LLLL y'}}</div>
+        <div *ngIf=' ( i==0 && format(participation.evenement.dateDebut)==format(date)) || ( i > 0 &&  format(participation.evenement.dateDebut)!= format(participations[i-1].evenement.dateDebut) && format(participation.evenement.dateDebut)==format(date)) ' class="list-group-item list-group-item-accent-secondary bg-light text-center font-weight-bold text-muted text-uppercase small">Aujourd'hui</div>
+        <div class="list-group-item list-group-item-accent-{{colors[Math.floor(Math.random() * colors.length)]}} list-group-item-divider">
+          <div class="avatar float-right">
+            <img style="height: 40px;" class="img-avatar" src="assets/img/avatars/{{pictures[Math.floor(Math.random() * pictures.length)]}}.jpg">
+          </div>
+          <div>
+            <strong>{{participation.evenement.nom}}</strong>
+          </div>
+          <small class="text-muted mr-3">
+            <i class="icon-calendar"></i>  {{participation.evenement.dateDebut | date:'hh:mma'}} - {{participation.evenement.dateFin | date:'hh:mma'}}</small>
+          <small class="text-muted">
+            <i class="icon-location-pin"></i>  {{participation.evenement.lieu}}</small>
+        </div>
+        
+      </div>
+      <!-- <button (click)="show()">COMPARE</button> -->
+    </tab>
+  </tabset>
+  <div class="card card-cascade"></div>

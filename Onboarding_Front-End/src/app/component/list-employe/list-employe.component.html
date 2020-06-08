@@ -1,0 +1,332 @@
+<h3>Gestion des employés</h3>
+<alert *ngIf="delete" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien supprimé.
+</alert>
+<alert *ngIf="created" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien créé.
+</alert>
+<alert *ngIf="updated" type="success" dismissOnTimeout="5000" [dismissible]="dismissible">
+  <strong>Succès!</strong> L'enregistrement est bien modifié.
+</alert>
+<div class="card">
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i>Table des employés
+    </div>
+    <div class="card-body">
+      
+      <table class="table table-striped table-responsive-xl">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Email</th>
+            <th>Mot de passe</th>
+            <th>Cin</th>
+            <th>Tele</th>
+            <th>Adresse</th>
+            <th>Service</th>
+            <th>Poste</th>
+            <th>Sexe</th>
+            <th>Date de naissance</th>
+            <th>Date de recrutement</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+              <td>{{user.nom}}</td>
+              <td>{{user.prenom}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.motPasse}}</td>
+              <td>{{user.cin}}</td>
+              <td>{{user.tel}}</td>
+              <td>{{user.adresse}}</td>
+              <td>{{user.equipe.service}}</td>
+              <td>{{user.poste.nomPoste}}</td>
+              <td>{{user.sexe}}</td>
+              <td>{{user.dateNaissance}}</td>
+              <td>{{user.dateRecrutement}}</td>
+              <td><button class="btn btn-danger" data-toggle="modal" (click)="smallModal.show()">Supprimer</button>
+                <button class="btn btn-primary" (click)="onUpdate(user)">Modifier</button></td>
+               <!-- START MODAL SUPPRESSION -->
+                <div bsModal #smallModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">Suppression</h4>
+                        <button type="button" class="close" (click)="smallModal.hide()" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Vous voulez supprimer cet enregistrement ?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="smallModal.hide()">Fermer</button>
+                        <button type="button" class="btn btn-primary" (click)="deleteEmploye(user)">Supprimer</button>
+                      </div>
+                    </div><!-- /.modal-content -->
+                  </div>
+                </div>
+                <!-- END MODAL SUPPRESSION -->
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" (click)="onAdd()">Ajouter</button>
+    </div>
+</div>
+<!-- start modal modification -->
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- Update Form  -->
+      <form [formGroup]="formUpdate" (ngSubmit)="updateForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+      <div class="modal-header">
+        <h4 class="modal-title">Modifier un employé</h4>
+        <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="card-header">
+            <strong>Informations</strong> 
+          </div>
+          <div class="card-body">
+            <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="text-input">Prenom</label>
+               <div class="col-md-9">
+                 <input type="text" formControlName="prenom" id="text-input" name="prenom" class="form-control" >
+                 <span *ngIf="submitUpdate && formUp.prenom.errors?.required" class="help-block">Veuillez entrer le prenom</span>
+               </div>
+             </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="text-input">Nom</label>
+               <div class="col-md-9">
+                 <input type="text" formControlName="nom"  name="nom" class="form-control" >
+                 <span *ngIf="submitUpdate && formUp.nom.errors?.required" class="help-block">Veuillez entrer le nom</span>
+               </div>
+             </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="email-input">Email</label>
+               <div class="col-md-9">
+                 <input type="email"  formControlName="email"  name="email" class="form-control"  autocomplete="email">
+                 <span *ngIf="submitUpdate && formUp.email.errors?.required" class="help-block">Veuillez entrer l'email</span>
+                 <span *ngIf="submitUpdate && formUp.email.errors?.email" class="help-block">Veuillez entrer un email valide</span>
+               </div>
+             </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="password-input">Mot de passe</label>
+               <div class="col-md-9">
+                 <input type="password" formControlName="motPasse" name="password-input" class="form-control"  autocomplete="current-password">
+                 <span *ngIf="submitUpdate && formUp.motPasse.errors?.required" class="help-block">Veuillez entrer le mot de passe</span>
+               </div>
+             </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="text-input">CIN</label>
+               <div class="col-md-9">
+                 <input type="text" formControlName="cin"  name="cin" class="form-control" >
+                 <span *ngIf="submitUpdate && formUp.cin.errors?.required" class="help-block">Veuillez entrer CIN</span>
+               </div>
+              </div>
+               <div class="form-group row">
+                 <label class="col-md-3 col-form-label" for="text-input">Adresse</label>
+                 <div class="col-md-9">
+                   <input type="text" formControlName="adresse" name="adresse" class="form-control">
+                   <span *ngIf="submitUpdate && formUp.adresse.errors?.required" class="help-block">Veuillez entrer l'adresse</span>
+                 </div>
+               </div>
+               <div class="form-group row">
+                 <label class="col-md-3 col-form-label" for="text-input">Téléphone</label>
+                 <div class="col-md-9">
+                   <input type="text" formControlName="tel" name="tel" class="form-control" >
+                   <span *ngIf="submitUpdate && formUp.tel.errors?.required" class="help-block">Veuillez entrer le numero du téléphone</span>
+                 </div>
+               </div>
+               <div class="form-group row">
+                 <label class="col-md-3 col-form-label" for="text-input">Sexe</label>
+                 <div class="col-md-9">
+                   <select  formControlName="sexe" name="sexe" class="form-control ">
+                     <option value="femme">femme</option>
+                     <option value="homme">homme</option>
+                   </select>
+                   <span *ngIf="submitUpdate && formUp.sexe.errors?.required" class="help-block">Veuillez entrer le sexe</span>
+                 </div>
+               </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="date-input">Date de naissance</label>
+               <div class="col-md-9">
+                 <input class="form-control" formControlName="dateNaissance" type="date" name="dateNaissance" >
+                 <span *ngIf="submitUpdate && formUp.dateNaissance.errors?.required" class="help-block">Veuillez entrer la date de naissance</span>
+                 <span *ngIf="errorDateN.isError" class="help-block">{{ errorDateN.errorMessage }}</span>
+                </div>
+             </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="date-input">Date de recrutement</label>
+               <div class="col-md-9">
+                 <input class="form-control" formControlName="dateRecrutement" type="date" name="dateRecrutement" >
+                 <span *ngIf="submitUpdate && formUp.dateRecrutement.errors?.required" class="help-block">Veuillez entrer la date de recrutement</span>
+                 <span *ngIf="errorDateR.isError" class="help-block">{{ errorDateR.errorMessage }}</span>
+                </div>
+             </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="text-input">Equipe</label>
+               <div class="col-md-9">
+                 <select  formControlName="equipe" name="equipe" class="form-control">
+                    <option *ngFor="let equipe of equipes" value={{equipe.id}} >{{equipe.service}}</option>
+                 </select>
+                 <span *ngIf="submitUpdate && formUp.equipe.errors?.required" class="help-block">Veuillez entrer l'équipe</span>
+               </div>
+              </div>
+             <div class="form-group row">
+               <label class="col-md-3 col-form-label" for="text-input">Poste</label>
+               <div class="col-md-9">
+                 <select  formControlName="poste" name="poste" class="form-control">
+                   <option *ngFor="let poste of postes" value="{{poste.id}}">{{poste.nomPoste}}</option>
+                </select>
+                <span *ngIf="submitUpdate && formUp.poste.errors?.required" class="help-block">Veuillez entrer le poste </span>
+               </div>
+             </div>
+         </div>
+       </div>
+       <div  *ngIf="errorEmail" class="invalid-feedback" style="display: block;font-weight:500;font-size: 13px;">
+         L'adresse email déjà existe,Veulliez entrer une autre.
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Fermer</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
+    <!-- End Form -->
+    </div>
+  </div>
+</div>
+
+<!-- start modal ajout -->
+<div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- Add Form  -->
+      <form [formGroup]="formAdd" (ngSubmit)="createForm()" method="post" enctype="multipart/form-data" class="form-horizontal">
+      <div class="modal-header">
+        <h4 class="modal-title">Ajouter un employé</h4>
+        <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="card-header">
+            <strong>Informations</strong> 
+          </div>
+          <div class="card-body">
+             <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="text-input">Prenom</label>
+                <div class="col-md-9">
+                  <input type="text" formControlName="prenom" id="text-input" name="prenom" class="form-control" >
+                  <span *ngIf="submitted && form.prenom.errors?.required" class="help-block">Veuillez entrer le prenom</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="text-input">Nom</label>
+                <div class="col-md-9">
+                  <input type="text" formControlName="nom" id="text-input1" name="nom" class="form-control" >
+                  <span *ngIf="submitted && form.nom.errors?.required" class="help-block">Veuillez entrer le nom</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="email-input">Email</label>
+                <div class="col-md-9">
+                  <input type="email"  formControlName="email" id="email-input" name="email" class="form-control"  autocomplete="email">
+                  <span *ngIf="submitted && form.email.errors?.required" class="help-block">Veuillez entrer l'email</span>
+                  <span *ngIf="submitted && form.email.errors?.email" class="help-block">Veuillez entrer un email valide</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="password-input">Mot de passe</label>
+                <div class="col-md-9">
+                  <input type="password" formControlName="motPasse" id="password-input" name="password-input" class="form-control"  autocomplete="current-password">
+                  <span *ngIf="submitted && form.motPasse.errors?.required" class="help-block">Veuillez entrer le mot de passe</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="text-input">CIN</label>
+                <div class="col-md-9">
+                  <input type="text" formControlName="cin"  name="cin" class="form-control" >
+                  <span *ngIf="submitted && form.cin.errors?.required" class="help-block">Veuillez entrer CIN</span>
+                </div>
+               </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="text-input">Adresse</label>
+                  <div class="col-md-9">
+                    <input type="text" formControlName="adresse" name="adresse" class="form-control">
+                    <span *ngIf="submitted && form.adresse.errors?.required" class="help-block">Veuillez entrer l'adresse</span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="text-input">Téléphone</label>
+                  <div class="col-md-9">
+                    <input type="text" formControlName="tel" name="tel" class="form-control" >
+                    <span *ngIf="submitted && form.tel.errors?.required" class="help-block">Veuillez entrer le numero du téléphone</span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="text-input">Sexe</label>
+                  <div class="col-md-9">
+                    <select  formControlName="sexe" name="sexe" class="form-control ">
+                      <option value="femme">femme</option>
+                      <option value="homme">homme</option>
+                    </select>
+                    <span *ngIf="submitted && form.sexe.errors?.required" class="help-block">Veuillez entrer le sexe</span>
+                  </div>
+                </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="date-input">Date de naissance</label>
+                <div class="col-md-9">
+                  <input class="form-control" formControlName="dateNaissance" type="date" name="dateNaissance" >
+                  <span *ngIf="submitted && form.dateNaissance.errors?.required" class="help-block">Veuillez entrer la date de naissance</span>
+                  <span *ngIf="errorDateN.isError" class="help-block">{{ errorDateN.errorMessage }}</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="date-input">Date de recrutement</label>
+                <div class="col-md-9">
+                  <input class="form-control" formControlName="dateRecrutement" type="date" name="dateRecrutement" >
+                  <span *ngIf="submitted && form.dateRecrutement.errors?.required" class="help-block">Veuillez entrer la date de recrutement</span>
+                  <span *ngIf="errorDateR.isError" class="help-block">{{ errorDateR.errorMessage }}</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="text-input">Equipe</label>
+                <div class="col-md-9">
+                  <select  formControlName="equipe" name="equipe" class="form-control">
+                    <option *ngFor="let equipe of equipes" [ngValue]="equipe">{{equipe.service}}</option>
+                  </select>
+                  <span *ngIf="submitted && form.equipe.errors?.required" class="help-block">Veuillez entrer l'équipe</span>
+                </div>
+               </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="text-input">Poste</label>
+                <div class="col-md-9">
+                  <select  formControlName="poste" name="poste" class="form-control">
+                    <option *ngFor="let poste of postes" [ngValue]="poste">{{poste.nomPoste}}</option>
+                 </select>
+                 <span *ngIf="submitted && form.poste.errors?.required" class="help-block">Veuillez entrer le poste </span>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div  *ngIf="errorEmail" class="invalid-feedback" style="display: block;font-weight:500;font-size: 13px;">
+          L'adresse email déjà existe,Veulliez entrer une autre.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addModal.hide()">Fermer</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
+    <!-- End Form -->
+    </div>
+  </div>
+</div>
